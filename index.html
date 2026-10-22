@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing Strategy Ready Reckoner</title>
+<meta name="description" content="An industry-agnostic playbook for end-to-end marketing strategy, worked through with a financial services and an airline example.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F7; --panel:#FFFFFF; --ink:#12263A; --muted:#51657A; --line:#CFD9E0;
+  --warn:#B45309; --warn-bg:#FBF0E1;
+  --accent:#1F6F4A; --accent-soft:#DCEFE5; --accent-ink:#0F3D29;
+  --head:"Bricolage Grotesque",system-ui,sans-serif; --body:"Literata",Georgia,serif;
+}
+body[data-industry="airline"]{ --accent:#2457A6; --accent-soft:#DCE7F7; --accent-ink:#112E5C; }
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#0E1A25; --panel:#142433; --ink:#E6EEF4; --muted:#9FB2C3; --line:#26394B; --warn:#F0A24B; --warn-bg:#2E2112; --accent:#4FB98A; --accent-soft:#16372B; --accent-ink:#BFEBD6; }
+  body[data-industry="airline"]{ --accent:#7FA8E8; --accent-soft:#1B2E4D; --accent-ink:#CFE0FA; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important;animation:none!important} }
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.65;transition:none}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--head);line-height:1.1;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2.4rem,5.2vw,4.1rem);font-weight:800}
+h2{font-size:clamp(1.7rem,3vw,2.3rem);font-weight:700;margin-bottom:.6em}
+h3{font-size:1.2rem;font-weight:700;margin:1.8em 0 .5em}
+p{margin:0 0 1em;max-width:68ch}
+.wrap{display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px;max-width:1240px;margin:0 auto;padding:0 28px}
+nav.rail{position:sticky;top:0;align-self:start;padding:28px 0;height:100vh;font-family:var(--head);font-size:.95rem}
+nav.rail strong{display:block;font-size:1.05rem;margin-bottom:18px;line-height:1.2}
+nav.rail a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;border-left:3px solid var(--line)}
+nav.rail a:hover,nav.rail a[aria-current="true"]{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0;padding-bottom:80px}
+header.hero{padding:44px 0 36px}
+header.hero p.lede{font-size:1.2rem;color:var(--muted);margin-top:18px}
+section{padding:54px 0 8px;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+/* Funnel lab */
+.lab{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 22px 18px;margin-top:26px}
+.controls{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:18px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:600 .95rem var(--head);background:transparent;color:var(--muted);border:0;padding:9px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.seg-label{display:block;font:600 .85rem var(--head);color:var(--muted);margin-bottom:5px}
+.funnel{display:grid;gap:8px;margin:6px 0 14px}
+.stage{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:12px}
+.stage .name{font:600 .92rem var(--head)}
+.bar{height:34px;background:var(--accent-soft);border-radius:4px;position:relative;min-width:60px;transition:width .35s ease}
+.bar span{position:absolute;left:10px;top:50%;transform:translateY(-50%);font:700 .9rem var(--head);color:var(--accent-ink);white-space:nowrap}
+.stage .rate{grid-column:2;font-size:.85rem;color:var(--muted);margin:-4px 0 4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:10px}
+.kpi{border-left:4px solid var(--accent);padding:2px 0 2px 12px}
+.kpi b{display:block;font:800 1.55rem var(--head)}
+.kpi small{color:var(--muted);font-size:.85rem}
+.kpi.bad{border-left-color:var(--warn)} .kpi.bad b{color:var(--warn)}
+.verdict{margin-top:16px;padding:12px 14px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);font-size:.98rem;max-width:none}
+.verdict.bad{background:var(--warn-bg);color:var(--warn)}
+.note{font-size:.88rem;color:var(--muted);margin-top:10px;max-width:none}
+/* content */
+dl.rules{margin:0;display:grid;gap:14px;max-width:70ch}
+dl.rules dt{font:700 1.08rem var(--head)}
+dl.rules dd{margin:2px 0 0;color:var(--muted)}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;max-width:74ch}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 22px 52px;border-left:2px solid var(--line);margin-left:16px}
+ol.steps li::before{content:counter(s);position:absolute;left:-17px;top:-2px;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font:700 .95rem/32px var(--head);text-align:center}
+ol.steps li:last-child{border-left-color:transparent}
+ol.steps b{font:700 1.08rem var(--head)}
+ol.steps em{display:block;color:var(--muted);font-style:normal;font-size:.93rem;margin-top:3px}
+table{border-collapse:collapse;width:100%;font-size:.95rem;line-height:1.5;background:var(--panel);border:1px solid var(--line)}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font:700 .9rem var(--head);background:var(--accent-soft);color:var(--accent-ink)}
+td:first-child{font-weight:600;font-family:var(--head);font-size:.92rem}
+.scroll{overflow-x:auto;margin:10px 0 22px}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:14px 0}
+.case{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);padding:16px 18px;border-radius:0 0 8px 8px}
+.case.fin{--c:#1F6F4A}.case.air{--c:#2457A6}
+.case h3{margin-top:0}
+.case p{font-size:.97rem;margin-bottom:.6em}
+ul.check{list-style:none;padding:0;margin:0 0 18px;max-width:74ch}
+ul.check li{padding-left:28px;position:relative;margin-bottom:7px}
+ul.check li::before{content:"";position:absolute;left:0;top:.35em;width:15px;height:15px;border:2px solid var(--accent);border-radius:3px}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}
+.formula{background:var(--panel);border:1px solid var(--line);padding:14px 18px;border-radius:6px;margin:12px 0;max-width:74ch;line-height:2}
+footer{border-top:1px solid var(--line);padding:28px 0 60px;color:var(--muted);font-size:.9rem}
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr;padding:0 18px;gap:0}
+  nav.rail{position:static;height:auto;padding:16px 0 0;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+  nav.rail strong{width:100%;margin-bottom:4px}
+  nav.rail a{border-left:0;padding:2px 0}
+  .twocol{grid-template-columns:1fr}
+  .stage{grid-template-columns:1fr}
+  .stage .rate{grid-column:1}
+}
+</style>
+</head>
+<body data-industry="financial">
+<div class="wrap">
+<nav class="rail" aria-label="Chapters">
+  <strong>Marketing strategy ready reckoner</strong>
+  <a href="#lab">Funnel lab</a>
+  <a href="#rules">Eight rules</a>
+  <a href="#playbook">Ten-step playbook</a>
+  <a href="#examples">Two worked examples</a>
+  <a href="#toolkit">Funnel formulas</a>
+  <a href="#channels">Channels</a>
+  <a href="#scale">Scale-up</a>
+  <a href="#fixes">Conversion and retention</a>
+  <a href="#partners">Partners and offline</a>
+  <a href="#govern">Measurement</a>
+  <a href="#diagnose">Diagnostics</a>
+</nav>
+<main>
+<header class="hero">
+  <h1>Raising spend 40% should not double your cost per customer.</h1>
+  <p class="lede">A reference for building a marketing strategy from diagnosis to governance in any industry. Every idea is tested on two businesses: a digital investing platform and an airline selling direct. Flip between them below and compare three ways to add budget.</p>
+
+  <div class="lab" id="lab" aria-labelledby="lab-title">
+    <h2 id="lab-title" style="font-size:1.35rem;margin-bottom:14px">Funnel lab: three ways to add 40% budget</h2>
+    <div class="controls">
+      <div><span class="seg-label" id="l-ind">Business</span>
+        <div class="seg" role="group" aria-labelledby="l-ind">
+          <button data-ind="financial" aria-pressed="true">Investing platform</button>
+          <button data-ind="airline" aria-pressed="false">Airline</button>
+        </div></div>
+      <div><span class="seg-label" id="l-sc">Scenario</span>
+        <div class="seg" role="group" aria-labelledby="l-sc">
+          <button data-sc="base" aria-pressed="true">Today</button>
+          <button data-sc="naive" aria-pressed="false">+40%, nothing else changes</button>
+          <button data-sc="smart" aria-pressed="false">+40%, optimised deeper</button>
+        </div></div>
+    </div>
+    <div class="funnel" id="funnel" aria-live="polite"></div>
+    <div class="kpis" id="kpis"></div>
+    <p class="verdict" id="verdict"></p>
+    <p class="note" id="labnote"></p>
+  </div>
+</header>
+
+<section id="rules">
+<h2>The eight rules</h2>
+<dl class="rules">
+<div><dt>Name the binding constraint first.</dt><dd>Growth is limited by one thing at a time: acquisition cost, conversion, retention, reach or capacity. Solve that, then diagnose again.</dd></div>
+<div><dt>Optimise to monetised outcomes, not leads.</dt><dd>Tune campaigns toward the deepest event you can measure reliably, and judge every channel on cost per that outcome.</dd></div>
+<div><dt>Scale in steps and hold the line.</dt><dd>Agree a cost tolerance before adding budget. A dip is a reason to optimise unless a pre-agreed red flag is crossed.</dd></div>
+<div><dt>Never depend on one channel.</dt><dd>Cap any single channel or campaign at about half of acquisition, and build a second and third source before you need them.</dd></div>
+<div><dt>Pair paid with earned.</dt><dd>Paid buys speed. Brand, search, content and partnerships build organic pull that lowers blended cost over time.</dd></div>
+<div><dt>Fix the leaks before adding water.</dt><dd>Friction in sign-up, pricing, payment and onboarding wastes every unit of traffic you buy.</dd></div>
+<div><dt>Reach before message.</dt><dd>Lifecycle messages work only as far as the channel reaches the customer. Measure deliverability and opt-in before rewriting copy.</dd></div>
+<div><dt>One owner, one number, one cadence.</dt><dd>Every channel and metric has a named owner, a single definition, and a fixed review rhythm.</dd></div>
+</dl>
+</section>
+
+<section id="playbook">
+<h2>The ten-step playbook</h2>
+<p>Run the steps in order for a new engagement. Each step ends in an output that feeds the next.</p>
+<ol class="steps">
+<li><b>Diagnose</b>Pull 6 to 12 months of funnel, cohort and channel data. Separate steady-state performance from scale-up effects.<em>Output: a one-page diagnosis naming the constraint.</em></li>
+<li><b>Set goals and guardrails</b>Set a headline goal, a cost ceiling, a quality floor and a retention target.<em>Output: a goal tree with thresholds.</em></li>
+<li><b>Segment and position</b>Define priority segments by need and value. Write one clear promise per product and remove overlaps.<em>Output: a segment map and a positioning statement per product.</em></li>
+<li><b>Build the funnel model</b>Define stages, conversion rates and unit costs, then model spend to outcome by month.<em>Output: a monthly projection.</em></li>
+<li><b>Design the channel mix</b>Give each channel a role, a target share and a concentration cap. Add new channels in a planned order.<em>Output: a channel plan with owners and start dates.</em></li>
+<li><b>Build brand and organic pull</b>Plan always-on awareness, search presence, content, partnerships and referrals with a share-of-voice target.<em>Output: a brand and organic plan with a budget share.</em></li>
+<li><b>Remove conversion friction</b>Audit sign-up, pricing, payment and onboarding. Rank fixes by impact and effort, and test the biggest drops.<em>Output: a prioritised fix list, P0 to P2.</em></li>
+<li><b>Design lifecycle and retention</b>Map onboarding, activation, repeat use and win-back. Check reach per channel and set one message cadence.<em>Output: journeys and a retention target.</em></li>
+<li><b>Activate partners and offline</b>Give intermediaries leads, co-branded assets and tracking. Track every lead to closure.<em>Output: a partner and offline playbook.</em></li>
+<li><b>Govern and measure</b>Build the KPI tree, assign owners, and set review cadence and a risk register.<em>Output: an owner matrix and a dashboard.</em></li>
+</ol>
+</section>
+
+<section id="examples">
+<h2>Two worked examples</h2>
+<p>The same playbook, applied to two very different businesses. Figures are illustrative round numbers created for teaching, not data from any company.</p>
+<div class="twocol">
+  <div class="case fin"><h3>Investing platform</h3>
+  <p>A digital-first broker with a large app base. It buys leads through search and social, opens accounts, and earns when customers place their first trade. Costs per account look acceptable, but customers who never trade leave, and the active base is shrinking.</p>
+  <p><b>Binding constraint:</b> cost per first-trade customer rises whenever spend rises.</p></div>
+  <div class="case air"><h3>Airline</h3>
+  <p>A full-service carrier that sells through its own site and app, but depends on online travel agents and metasearch for a large share of bookings, at a commission. Demand is seasonal and route-specific, and loyalty enrolment at booking is low.</p>
+  <p><b>Binding constraint:</b> direct share of bookings is too low, so distribution cost stays high.</p></div>
+</div>
+<div class="scroll"><table>
+<thead><tr><th scope="col">Step</th><th scope="col">Investing platform</th><th scope="col">Airline</th></tr></thead>
+<tbody>
+<tr><td>1. Diagnose</td><td>Break results by source. Find that a large volume campaign turns about 1% of leads into first trades, while a smaller event-optimised one turns about 5%.</td><td>Split bookings by channel and route. Find that 62% of bookings arrive through agents and metasearch, and that brand-name searches leak to them.</td></tr>
+<tr><td>2. Goals and guardrails</td><td>Cost per first trade within 20% of today's level during scale. Invalid leads below 10-15% of volume.</td><td>Raise direct share from 38% to 45% in 12 months. Cost per direct booking no more than 10% above today.</td></tr>
+<tr><td>3. Segment and position</td><td>Core segment: active self-directed investors, plus mutual-fund holders ready to upgrade. One promise for advice, a separate one for stock ideas.</td><td>Segment by trip purpose: business, leisure and visiting friends and family. Promise service and flexibility on routes where price parity exists.</td></tr>
+<tr><td>4. Funnel model</td><td>Leads, accounts opened, first trade. Project monthly cost per first trade as spend steps up.</td><td>Paid visits, booking started, ticket purchased. Project cost per booking by route cluster and season.</td></tr>
+<tr><td>5. Channel mix</td><td>Search was 80% of paid results. Add social, app networks, programmatic and referral partners in dated waves.</td><td>Defend brand search, add route-level search, CRM to existing members, and card and hotel partners.</td></tr>
+<tr><td>6. Brand and organic</td><td>Always-on educational video and search content to lift organic share of new accounts from about a quarter to over a third.</td><td>Destination content and route launches with press and outdoor in origin cities. Track direct and organic search share.</td></tr>
+<tr><td>7. Conversion friction</td><td>The funding step loses 60% of people who start. Fix payment options, reduce offer clutter, add proof and a returns calculator.</td><td>Booking flow loses 75% after start. Show total price early, add local payment methods, and shorten passenger-detail forms.</td></tr>
+<tr><td>8. Lifecycle and retention</td><td>Push reach is 40%. Fix infrastructure, drive the first trade within 7 days, then add alerts and watchlists to bring users back.</td><td>Enrol travellers in the programme at booking. Time pre-trip upsell, post-trip survey and next-trip offers by route and fare type.</td></tr>
+<tr><td>9. Partners and offline</td><td>Franchise and branch networks get free starter leads, co-branded content and lead-status tracking.</td><td>Travel agents and corporate desks get a direct-booking tool and fast fare tools, so the carrier keeps the customer relationship.</td></tr>
+<tr><td>10. Govern and measure</td><td>One owner per channel. Weekly review of spend, CAC and funnel. Monthly retention and brand review.</td><td>Revenue management, distribution and marketing share one dashboard. Weekly fare and spend review.</td></tr>
+</tbody></table></div>
+<p>In both cases the move is the same: choose the constraint, set guardrails, shift optimisation toward the deepest outcome, then widen the channel base.</p>
+</section>
+
+<section id="toolkit">
+<h2>Funnel formulas</h2>
+<p>Write the funnel as stages with a single conversion rate between each. Judge every channel on cost per the deepest reliable outcome.</p>
+<div class="formula mono">
+Cost per lead = spend / leads<br>
+CAC = spend / new customers<br>
+Cost per monetised customer = cost per lead / (lead-to-customer rate x customer-to-monetised rate)<br>
+Blended CAC = (paid spend + other acquisition cost) / all new customers, paid and organic<br>
+Payback (months) = CAC / monthly margin per customer<br>
+LTV to CAC = lifetime margin / CAC
+</div>
+<div class="scroll"><table>
+<thead><tr><th scope="col">Stage</th><th scope="col">Investing platform</th><th scope="col">Airline</th><th scope="col">Watch for</th></tr></thead>
+<tbody>
+<tr><td>Reach</td><td>Ad impressions, share of voice</td><td>Impressions, route awareness</td><td>Reach that never converts</td></tr>
+<tr><td>Lead</td><td>Sign-up started</td><td>Paid visit</td><td>Wrong-fit or invalid traffic</td></tr>
+<tr><td>Customer</td><td>Account opened and verified</td><td>Booking started</td><td>Drop at forms or verification</td></tr>
+<tr><td>Monetised</td><td>First trade</td><td>Ticket purchased</td><td>Quality dips as spend rises</td></tr>
+<tr><td>Retained</td><td>Active at day 30, 90 and month 12</td><td>Repeat booking, loyalty activity</td><td>Idle customers leaving first</td></tr>
+</tbody></table></div>
+<p><b>Set these guardrails before scaling:</b> a cost tolerance (for example, up to 20% above today), a quality floor for wrong-fit leads, a numeric red-flag trigger for pausing, and one fixed definition for each conversion window (same month, day 7, day 30, rolling).</p>
+</section>
+
+<section id="channels">
+<h2>Channel roles</h2>
+<p>Give every channel a role. Capture channels harvest existing demand, create channels build it, and each one needs its own metric.</p>
+<div class="scroll"><table>
+<thead><tr><th scope="col">Channel</th><th scope="col">Role</th><th scope="col">Investing platform</th><th scope="col">Airline</th><th scope="col">Main risk</th></tr></thead>
+<tbody>
+<tr><td>Paid search</td><td>Capture</td><td>"Open account" and stock-name searches</td><td>Brand and route searches that otherwise leak to agents</td><td>One platform dominating</td></tr>
+<tr><td>Social and video ads</td><td>Create, convert</td><td>Event-optimised ads, click-to-chat</td><td>Route launches and seasonal offers</td><td>Creative fatigue</td></tr>
+<tr><td>App and network ads</td><td>Scale</td><td>Install-and-first-trade campaigns</td><td>App installs for loyalty members</td><td>Low-quality traffic</td></tr>
+<tr><td>Affiliates and referral</td><td>Controlled scale</td><td>Pay per funded account</td><td>Cards, hotels and travel content partners</td><td>Slow ramp, payout design</td></tr>
+<tr><td>Brand media</td><td>Create</td><td>CTV, press, outdoor in focus cities</td><td>Outdoor and press in origin cities</td><td>Hard to attribute</td></tr>
+<tr><td>Content and SEO</td><td>Create, capture</td><td>Investing explainers and research videos</td><td>Destination and travel-planning guides</td><td>Slow to compound</td></tr>
+<tr><td>CRM and lifecycle</td><td>Convert, retain</td><td>First-trade and reactivation journeys</td><td>Pre-trip, post-trip and win-back journeys</td><td>Over-messaging</td></tr>
+<tr><td>Partners and field</td><td>Convert</td><td>Franchise and branch networks</td><td>Agents and corporate travel desks</td><td>Dependence on partner effort</td></tr>
+</tbody></table></div>
+<ul class="check">
+<li>Cap any single channel or campaign at about half of acquisition and plan how to reduce it.</li>
+<li>If self-served performance channels contribute under 10% of paid scale, aim for 30-40%.</li>
+<li>Once past the first scale-up, keep about a fifth of lead-generation spend for brand building.</li>
+<li>Add channels in a dated sequence, each with a test budget and a pass mark.</li>
+<li>Watch organic share as a leading indicator that brand and content are working.</li>
+</ul>
+</section>
+
+<section id="scale">
+<h2>Scale-up playbook</h2>
+<p>A budget increase of about 40% exposes problems that steady-state spend hides: weaker lead quality, slower follow-up, lower conversion. Plan for it, and do not let it trigger a retreat. The funnel lab above shows the pattern: the naive path pushes cost per customer up, while optimising deeper lets cost per lead rise but brings cost per customer down.</p>
+<ol class="steps">
+<li><b>Baseline in steady state</b>Change nothing about targeting, follow-up, journeys or onboarding, so you can see what volume alone does.</li>
+<li><b>Fix capacity before volume</b>Check call connectivity, follow-up time, verification and message reach.</li>
+<li><b>Step the budget</b>Raise spend in tranches and read results at a fixed point before the next step.</li>
+<li><b>Move optimisation deeper</b>Shift campaign signals from top-funnel to mid- and bottom-funnel events.</li>
+<li><b>Expect cost per lead to rise</b>Judge on cost per monetised customer instead.</li>
+<li><b>Reallocate, do not just cut</b>Run old and new campaigns side by side, then move budget on evidence.</li>
+<li><b>Use red flags, not instinct</b>Pause only when a pre-agreed threshold is breached for a full cycle.</li>
+<li><b>Protect the window</b>Clear compliance and platform approvals before launch. One roadblock can pause every campaign.</li>
+</ol>
+</section>
+
+<section id="fixes">
+<h2>Conversion, lifecycle and retention</h2>
+<h3>Conversion friction audit</h3>
+<ul class="check">
+<li>Find the stage with the largest drop and test it first.</li>
+<li>Add trust signals: testimonials, a calculator, clear credentials, and the reasoning behind each recommendation.</li>
+<li>Remove price disparity and offer clutter that blurs the core value.</li>
+<li>Let customers buy before completing non-essential verification, then collect it afterward.</li>
+<li>Offer every payment option on every plan, and make recurring-payment set-up amounts match what the customer sees.</li>
+<li>Rename complex product names in plain words, and add two or three short onboarding screens.</li>
+</ul>
+<h3>Lifecycle communication</h3>
+<ul class="check">
+<li>Measure reach by channel before editing any message, and fix infrastructure until reach passes your target (80% is a reasonable goal).</li>
+<li>Replace offer-led messages with product-led ones that explain use.</li>
+<li>Bundle messages into one notification centre or cadence.</li>
+<li>Track conversion by day 7, 15 and 30 for every journey.</li>
+<li>Feed call and event data back to the customer data platform so segments improve.</li>
+</ul>
+<h3>Retention and revenue per customer</h3>
+<ul class="check">
+<li>Drive a first transaction before pushing the second product.</li>
+<li>Raise products per customer with recommendations by affluence or need.</li>
+<li>Add non-transactional reasons to return: content, watchlists, alerts, trackers.</li>
+<li>Connect advisors or sales teams to digital journeys.</li>
+<li>Build an older-customer pool and reactivate it, because a large share of new monetised customers often come from earlier leads.</li>
+</ul>
+</section>
+
+<section id="partners">
+<h2>Partners and offline channels</h2>
+<p>When customers are served by franchisees, agents, branches or field teams, equip those people, not just the advertising.</p>
+<div class="scroll"><table>
+<thead><tr><th scope="col">Lever</th><th scope="col">What to do</th><th scope="col">Investing platform</th><th scope="col">Airline</th></tr></thead>
+<tbody>
+<tr><td>Quality over quantity</td><td>Pick partners on fit and growth potential</td><td>Franchisees with active local networks</td><td>Agents with strong corporate accounts</td></tr>
+<tr><td>Partner hub</td><td>One place for co-branded assets, events and leads</td><td>Partner growth corner</td><td>Agent portal with fares and content</td></tr>
+<tr><td>Free, then adopt</td><td>Start with a few free leads, then bring partners into the integrated model</td><td>Five starter leads</td><td>Free access to a direct-booking tool</td></tr>
+<tr><td>Central lead generation</td><td>Generate centrally, distribute by area and affluence</td><td>Branch and advisor lead supply</td><td>Corporate lead supply to sales teams</td></tr>
+<tr><td>Status tracking</td><td>Record status and a client ID after every meeting</td><td>Calling team confirms closure</td><td>CRM tracks each corporate pitch</td></tr>
+<tr><td>Fast follow-up</td><td>Keep leads warm while waiting for contact</td><td>Digital journey inside 48 hours</td><td>Auto-follow-up on quote requests</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="govern">
+<h2>Measurement and governance</h2>
+<p>Build one KPI tree and give each node a named owner, so a move in the headline number can be traced to a lever.</p>
+<div class="scroll"><table>
+<thead><tr><th scope="col">Level</th><th scope="col">KPI</th><th scope="col">Review</th></tr></thead>
+<tbody>
+<tr><td>Outcome</td><td>New customers, monetised customers, revenue, retention</td><td>Monthly</td></tr>
+<tr><td>Efficiency</td><td>Paid and blended CAC, cost per monetised customer, payback</td><td>Weekly</td></tr>
+<tr><td>Funnel</td><td>Lead quality and volume, stage conversion</td><td>Weekly</td></tr>
+<tr><td>Brand</td><td>Awareness, consideration, share of voice, organic share</td><td>Monthly or quarterly</td></tr>
+<tr><td>Lifecycle</td><td>Reach by channel, journey conversion, engagement</td><td>Weekly</td></tr>
+<tr><td>Retention</td><td>Cohort retention, products per customer, active base</td><td>Monthly</td></tr>
+<tr><td>Partners and offline</td><td>Active partners, lead-to-close, cycle time</td><td>Weekly</td></tr>
+<tr><td>Finance</td><td>Spend against plan, one source of numbers</td><td>Monthly</td></tr>
+</tbody></table></div>
+<ul class="check">
+<li>Report conversion on unique customers from one cohort. Event counts across months are not conversion rates.</li>
+<li>Join campaign data to customer data so each channel is read down to lifetime value.</li>
+<li>Run a continuous brand tracker, plus before-and-after research for campaigns.</li>
+<li>Keep a risk register with owners for compliance, platform dependence, vendor migration and data quality.</li>
+<li>Meet weekly on spend, CAC and funnel; monthly on outcomes, retention and brand; quarterly to reset mix, targets and plan.</li>
+</ul>
+</section>
+
+<section id="diagnose">
+<h2>Diagnostics</h2>
+<p>When a metric moves the wrong way, check the likely cause before changing the plan.</p>
+<div class="scroll"><table>
+<thead><tr><th scope="col">Symptom</th><th scope="col">Likely cause</th><th scope="col">First fix</th></tr></thead>
+<tbody>
+<tr><td>CAC rises as spend rises</td><td>Lead quality falls at scale, or the back end cannot absorb volume</td><td>Optimise to deeper events, check follow-up capacity, set a quality floor</td></tr>
+<tr><td>Leads grow but monetised customers do not</td><td>Wrong-fit leads, or friction after sign-up</td><td>Audit sources, then sign-up and payment steps</td></tr>
+<tr><td>Large drop at the pricing page</td><td>Weak trust, unclear value, too many offers</td><td>A/B test, add proof, simplify offers and payment</td></tr>
+<tr><td>One channel dominates and cost swings</td><td>Concentration</td><td>Add two channels in sequence with caps</td></tr>
+<tr><td>Messages sent, engagement flat</td><td>Low reach or message overload</td><td>Measure reach, fix infrastructure, consolidate cadence</td></tr>
+<tr><td>Customers join but do not stay</td><td>No first transaction, weak fit, no advisor or digital sync</td><td>Drive first use, add reasons to return</td></tr>
+<tr><td>Strong paid, no organic growth</td><td>Unclear or absent brand</td><td>Always-on awareness, content and search</td></tr>
+<tr><td>Core segment ignores the brand</td><td>Value proposition not understood</td><td>Functional creative stating what you do differently</td></tr>
+<tr><td>Two products compete for one buyer</td><td>Overlapping positioning</td><td>Separate audiences and promises</td></tr>
+<tr><td>Numbers differ across teams</td><td>Different definitions and sources</td><td>One data owner, one dashboard, shared definitions</td></tr>
+<tr><td>All campaigns stop at once</td><td>Compliance or platform approval gap</td><td>Pre-clear approvals, keep a risk register</td></tr>
+</tbody></table></div>
+</section>
+
+<footer>
+<p>All figures on this page are illustrative round numbers created for teaching. They are not data from any company. Reuse and adapt freely.</p>
+</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  var DATA = {
+    financial: {
+      cur: "₹", costLabel: "Cost per first-trade customer", leadLabel: "Cost per lead",
+      stages: ["Leads","Accounts opened","First trade"],
+      scen: {
+        base:  {spend:60000000, unit:450, r:[.20,.20]},
+        naive: {spend:84000000, unit:470, r:[.17,.17]},
+        smart: {spend:84000000, unit:560, r:[.24,.22]}
+      },
+      text: {
+        base: "Today: 60M spent at 450 per lead. One in five leads opens an account, and one in five of those trades.",
+        naive: "The same campaigns with more budget reach weaker audiences and a stretched back end. Conversion falls at both steps, cost per first-trade customer jumps, and this is where teams hit the panic button.",
+        smart: "Optimising toward the first trade and fixing follow-up lifts both conversion rates. Cost per lead rises, which looks worse on a lead report, yet each first-trade customer costs less than today."
+      }
+    },
+    airline: {
+      cur: "$", costLabel: "Cost per booking", leadLabel: "Cost per paid visit",
+      stages: ["Paid visits","Booking started","Tickets purchased"],
+      scen: {
+        base:  {spend:4000000, unit:2.0, r:[.12,.25]},
+        naive: {spend:5600000, unit:2.4, r:[.11,.22]},
+        smart: {spend:5600000, unit:2.9, r:[.15,.27]}
+      },
+      text: {
+        base: "Today: 4M spent at $2.00 per paid visit. 12% start a booking and a quarter of those complete it.",
+        naive: "More of the same keywords and creatives pulls in browsers with lower intent, and the booking flow does not change. Cost per booking climbs by half.",
+        smart: "Shifting toward route and brand-intent searches and fixing price transparency and payment steps raises both rates. Visits cost more, but cost per booking stays within about 10% of today while volume grows."
+      }
+    }
+  };
+  var ind = "financial", sc = "base";
+  function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+  function calc(d,s){
+    var x = d.scen[s], c1 = x.spend/x.unit, c2 = c1*x.r[0], c3 = c2*x.r[1];
+    return {spend:x.spend, unit:x.unit, c:[c1,c2,c3], rates:x.r, cost:x.spend/c3};
+  }
+  function money(d,n){ return d.cur + (n>=1000? fmt(n): n.toFixed(n<10?2:0)); }
+  function render(){
+    var d = DATA[ind], r = calc(d,sc), b = calc(d,"base");
+    document.body.setAttribute("data-industry", ind);
+    var f = document.getElementById("funnel"), html = "";
+    var max = Math.max(calc(d,"base").c[0], calc(d,"naive").c[0], calc(d,"smart").c[0]);
+    for (var i=0;i<3;i++){
+      var w = Math.max(8, (r.c[i]/max)*100);
+      html += '<div class="stage"><div class="name">'+d.stages[i]+'</div><div class="bar" style="width:'+w.toFixed(1)+'%"><span>'+fmt(r.c[i])+'</span></div>';
+      if (i<2) html += '<div class="rate">'+Math.round(r.rates[i]*100)+'% move on to the next stage</div>';
+      html += '</div>';
+    }
+    f.innerHTML = html;
+    var dCost = (r.cost/b.cost-1)*100, dUnit=(r.unit/b.unit-1)*100, dOut=(r.c[2]/b.c[2]-1)*100;
+    function sign(v){ return (v>0?"+":"")+Math.round(v)+"% vs today"; }
+    var costBad = dCost > 20;
+    document.getElementById("kpis").innerHTML =
+      '<div class="kpi"><b>'+money(d,r.spend/1000000*1000000/1000000)+'M</b><small>Spend'+(sc==="base"?"":" (+40%)")+'</small></div>'+
+      '<div class="kpi"><b>'+money(d,r.unit)+'</b><small>'+d.leadLabel+(sc==="base"?"":", "+sign(dUnit))+'</small></div>'+
+      '<div class="kpi"><b>'+fmt(r.c[2])+'</b><small>'+d.stages[2]+(sc==="base"?"":", "+sign(dOut))+'</small></div>'+
+      '<div class="kpi'+(costBad?' bad':'')+'"><b>'+money(d,r.cost)+'</b><small>'+d.costLabel+(sc==="base"?"":", "+sign(dCost))+'</small></div>';
+    var v = document.getElementById("verdict");
+    v.className = "verdict"+(costBad?" bad":"");
+    v.textContent = d.text[sc];
+    document.getElementById("labnote").textContent = "Illustrative figures. The guardrail used here is a cost tolerance of 20% above today's cost per customer, and a result beyond it turns the card amber.";
+    document.querySelectorAll("[data-ind]").forEach(function(btn){ btn.setAttribute("aria-pressed", btn.dataset.ind===ind); });
+    document.querySelectorAll("[data-sc]").forEach(function(btn){ btn.setAttribute("aria-pressed", btn.dataset.sc===sc); });
+  }
+  document.querySelectorAll("[data-ind]").forEach(function(b){ b.addEventListener("click", function(){ ind=b.dataset.ind; render(); }); });
+  document.querySelectorAll("[data-sc]").forEach(function(b){ b.addEventListener("click", function(){ sc=b.dataset.sc; render(); }); });
+  render();
+  // current chapter in the rail
+  var links = Array.prototype.slice.call(document.querySelectorAll("nav.rail a"));
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ links.forEach(function(a){ a.removeAttribute("aria-current"); if(a.getAttribute("href")==="#"+e.target.id) a.setAttribute("aria-current","true"); }); } });
+    }, {rootMargin:"-30% 0px -60% 0px"});
+    document.querySelectorAll("main section, #lab").forEach(function(s){ io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
