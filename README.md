@@ -2,6 +2,8 @@
 
 A single-page, industry-agnostic reference for building an end-to-end marketing strategy, with worked examples from financial services and airlines.
 
+https://debashish-patra.github.io/Marketing-Strategy-Reckoner/
+
 - `index.html` is the whole site (no build step, no dependencies beyond Google Fonts).
 - All numbers on the page are illustrative and rounded for teaching. They are not taken from any company.
 
